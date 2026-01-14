@@ -17,12 +17,19 @@ export const appRouter = router({
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  wine: router({
+    processImage: publicProcedure
+      .input((val: unknown) => {
+        if (typeof val === 'object' && val !== null && 'imageData' in val) {
+          return val as { imageData: string };
+        }
+        throw new Error('Invalid input');
+      })
+      .mutation(async ({ input }) => {
+        const { processWineImage } = await import('./wine');
+        return processWineImage(input.imageData);
+      }),
+  })
 });
 
 export type AppRouter = typeof appRouter;
